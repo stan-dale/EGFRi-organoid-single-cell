@@ -1,7 +1,8 @@
 cell_type_markers = {
-    "ISCs": ["LGR5, AXIN2", "ASCL2"],
+    "ISCs": ["LGR5", "AXIN2", "ASCL2"],
     "PCs": ["DLL1", "NEUROG3", "CD44"],
     "Proliferating PCs": ["DLL1", "NEUROG3", "CD44", "MKI67"],
+    "Secretory PCs": ["NEUROG3", "INSM1", "NEUROD1", "SOX4", "ATOH1"],
     "Enterocytes": ["KRT20", "FABP2", "FABP1", "ALPI"],
     "Goblet cells": ["MUC2", "FCGBP", "GFI1"],
     "EECs": ["CHGA", "NEUROG3", "NEUROD1", "PAX4"]
@@ -20,3 +21,9 @@ cell_cycle_markers = {
  "G2E3"  ,  "GAS2L3",  "CBX5"  ,  "CENPA" 
     ]   
 }
+
+
+
+def quality_cluster_filter(): 
+    pass
+    
