@@ -5,7 +5,7 @@ cell_type_markers = {
     "Secretory PCs": ["NEUROG3", "INSM1", "NEUROD1", "SOX4", "ATOH1"],
     "Enterocytes": ["KRT20", "FABP2", "FABP1", "ALPI"],
     "Goblet cells": ["MUC2", "FCGBP", "GFI1"],
-    "EECs": ["CHGA", "NEUROG3", "NEUROD1", "PAX4"]
+    "EECs": ["CHGA", "CHGB", "NEUROG3", "NEUROD1", "PAX4", "PCSK1"]
 }
 
 cell_cycle_markers = {
@@ -22,8 +22,21 @@ cell_cycle_markers = {
     ]   
 }
 
+## TO DO, uninfy the labels for each cell type, eg: "PCs" & "Progenitor cells"
 
-
-def quality_cluster_filter(): 
-    pass
-    
+celltype_palette = {
+    "ISCs": "#7f7f7f",
+    "PCs": "#1ce6ff",
+    "Secretory PCs": "#e31a1c",
+    "Secretory progenitor cells": "#e31a1c",
+    "Proliferating Progenitor cells": "#ff4a46",
+    "Proliferating progenitor cells": "#ff4a46",
+    "Proliferating PCs": "#ff4a46",
+    "Inflammed secretory PCs": "#ff34ff",
+    "Inflammed Secretory PCs": "#ff34ff",
+    "Inflammed progenitor cells": "#ff34ff",
+    "Enterocytes": "#ffff00",
+    "Goblet cells": "#b15928",
+    "NEUROG3+ progenitor cells": "#8a7fe0",
+    "EECs": "#6651d1"
+}
