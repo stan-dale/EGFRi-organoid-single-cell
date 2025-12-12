@@ -27,16 +27,18 @@ cell_cycle_markers = {
 celltype_palette = {
     "ISCs": "#7f7f7f",
     "PCs": "#1ce6ff",
-    "Secretory PCs": "#e31a1c",
-    "Secretory progenitor cells": "#e31a1c",
+    "Secretory PCs": "#8a7fe0",
+    "Secretory progenitor cells": "#8a7fe0",
     "Proliferating Progenitor cells": "#ff4a46",
     "Proliferating progenitor cells": "#ff4a46",
     "Proliferating PCs": "#ff4a46",
-    "Inflammed secretory PCs": "#ff34ff",
-    "Inflammed Secretory PCs": "#ff34ff",
-    "Inflammed progenitor cells": "#ff34ff",
-    "Enterocytes": "#ffff00",
+    "Inflammed secretory PCs": "#ffff00",
+    "Inflammed Secretory PCs": "#ffff00",
+    "Inflammed progenitor cells": "#ffff00",
+    "Enterocytes": "#7FAF7A",
     "Goblet cells": "#b15928",
     "NEUROG3+ progenitor cells": "#8a7fe0",
     "EECs": "#6651d1"
 }
+
+
