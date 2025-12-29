@@ -23,6 +23,7 @@ cell_cycle_markers = {
 }
 
 ## TO DO, uninfy the labels for each cell type, eg: "PCs" & "Progenitor cells"
+## Should this live in vis.py instead?
 
 celltype_palette = {
     "ISCs": "#7f7f7f",
@@ -36,6 +37,7 @@ celltype_palette = {
     "Inflammed Secretory PCs": "#ffff00",
     "Inflammed progenitor cells": "#ffff00",
     "Enterocytes": "#7FAF7A",
+    "Enterocyte PCs": "#7FAF7A",
     "Goblet cells": "#b15928",
     "NEUROG3+ progenitor cells": "#8a7fe0",
     "EECs": "#6651d1"
