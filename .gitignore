@@ -1,4 +1,42 @@
-*DS_Store
-.ipynb_checkpoints/
+# === Large data files ===
+*.h5ad
+*.h5
+*.loom
+*.tar.gz
+
+# === Large output directories ===
+analysis/
+data/
+dropbox-data/
+
+# === Claude analysis outputs (large scored files) ===
+claude/decoupler/
+claude/enrichment/
+claude/enrichment_gseapy/
+
+# === Separate repo (consolidated into notebooks/dge/) ===
+more-egfr-singlecell/
+
+# === Anaconda project databases ===
 anaconda_projects/db/
-__pycache__
+
+# === Python ===
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+
+# === Jupyter ===
+.ipynb_checkpoints/
+
+# === macOS ===
+.DS_Store
+*DS_Store
+
+# === IDE ===
+.idea/
+.vscode/
+*.swp
+*.swo

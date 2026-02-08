@@ -1,0 +1,49 @@
+# Minimal environment specification for the core single-cell pipeline.
+# This lists only direct dependencies; conda will resolve transitive deps.
+#
+# Create with:
+#   conda env create -f conda/single-cell-env-minimal.yaml
+#
+# The full pinned export is in single-cell-env.yaml.
+name: single-cell-env
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.11
+  # Core scientific stack
+  - numpy
+  - pandas
+  - scipy
+  - matplotlib
+  - seaborn
+  # Single-cell analysis
+  - scanpy>=1.10
+  - anndata
+  - leidenalg
+  - igraph
+  - umap-learn
+  # CellAssign / scVI
+  - pip
+  - pip:
+    - scvi-tools>=1.4
+    - torch>=2.0
+  # Trajectory / velocity (optional)
+  - scvelo
+  - cellrank
+  # Decoupler
+  - decoupler
+  # Enrichment
+  - gseapy
+  # Utilities
+  - palettable
+  - scikit-learn
+  - h5py
+  - numba
+  - statsmodels
+  - pyyaml
+  # Jupyter
+  - jupyterlab
+  - ipykernel
+  - papermill

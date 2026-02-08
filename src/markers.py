@@ -1,0 +1,116 @@
+"""
+Marker gene definitions for cell type identification.
+
+Centralises all marker dictionaries used across the project's notebooks.
+"""
+
+
+# ── Main epithelial cell type markers (used by CellAssign & dotplots) ──
+
+cell_type_markers = {
+    "ISCs": ["LGR5", "AXIN2", "ASCL2"],
+    "PCs": ["DLL1", "NEUROG3", "CD44"],
+    "Proliferating PCs": ["DLL1", "NEUROG3", "CD44", "MKI67"],
+    "Secretory PCs": ["NEUROG3", "INSM1", "NEUROD1", "SOX4", "ATOH1"],
+    "Enterocytes": ["KRT20", "FABP2", "FABP1", "ALPI"],
+    "Goblet cells": ["MUC2", "FCGBP", "GFI1"],
+    "EECs": ["CHGA", "CHGB", "NEUROG3", "NEUROD1", "PAX4", "PCSK1"],
+}
+
+
+# ── EEC subtype markers (used in D10_Lapa EEC sub-analysis) ──
+
+EEC_markers = {
+    "NEUROG3+ PCs": "NEUROG3",
+    "Early EECs": ["HES1", "ASCL2", "ATOH1", "PAX4"],
+    "X cells": "GHRL",
+    "D cells": "SST",
+    "I cells": "CCK",
+    "K cells": "GIP",
+    "Enterochromaffin cells": ["CHGA", "CHGB", "SLC18A1", "LMX1A"],
+}
+
+
+# ── Additional marker sets found across notebooks ──
+
+More_Isc_markers = ["BMI1", "EPHB2", "SOX9", "PROM1"]
+
+Inflammed_Secretory_PC_markers = ["REG3A", "REG1B", "REG1A"]
+
+
+# ── Cell cycle markers (Tirosh et al.) ──
+
+cell_cycle_markers = {
+    "S_genes": [
+        "MCM5", "PCNA", "TYMS", "FEN1", "MCM2", "MCM4", "RRM1", "UNG",
+        "GINS2", "MCM6", "CDCA7", "DTL", "PRIM1", "UHRF1", "MLF1IP",
+        "HELLS", "RFC2", "RPA2", "NASP", "RAD51AP1", "GMNN", "WDR76",
+        "SLBP", "CCNE2", "UBR7", "POLD3", "MSH2", "ATAD2", "RAD51",
+        "RRM2", "CDC45", "CDC6", "EXO1", "TIPIN", "DSCC1", "BLM",
+        "CASP8AP2", "USP1", "CLSPN", "POLA1", "CHAF1B", "BRIP1", "E2F8",
+    ],
+    "G2M_genes": [
+        "HMGB2", "CDK1", "NUSAP1", "UBE2C", "BIRC5", "TPX2", "TOP2A",
+        "NDC80", "CKS2", "NUF2", "CKS1B", "MKI67", "TMPO", "CENPF",
+        "TACC3", "FAM64A", "SMC4", "CCNB2", "CKAP2L", "CKAP2", "AURKB",
+        "BUB1", "KIF11", "ANP32E", "TUBB4B", "GTSE1", "KIF20B", "HJURP",
+        "CDCA3", "HN1", "CDC20", "TTK", "CDC25C", "KIF2C", "RANGAP1",
+        "NCAPD2", "DLGAP5", "CDCA2", "CDCA8", "ECT2", "KIF23", "HMMR",
+        "AURKA", "PSRC1", "ANLN", "LBR", "CKAP5", "CENPE", "CTCF",
+        "NEK2", "G2E3", "GAS2L3", "CBX5", "CENPA",
+    ],
+}
+
+
+# ── Utility ──
+
+def filter_present_genes(adata, gene_list):
+    """
+    Return only genes from *gene_list* that exist in *adata.var_names*.
+
+    Also prints which genes are missing (useful for QC).
+
+    Parameters
+    ----------
+    adata : AnnData
+    gene_list : list[str]
+
+    Returns
+    -------
+    present : list[str]
+    missing : list[str]
+    """
+    varset = set(adata.var_names)
+    present = [g for g in gene_list if g in varset]
+    missing = [g for g in gene_list if g not in varset]
+    if missing:
+        print(f"  Missing genes (ignored): {', '.join(missing)}")
+    return present, missing
+
+
+def filter_marker_dict(adata, markers):
+    """
+    Filter a {cell_type: [genes]} dict to only genes present in *adata*.
+
+    Returns
+    -------
+    filtered : dict
+    all_missing : dict  (cell_type -> list of missing genes)
+    """
+    varset = set(adata.var_names)
+    filtered = {}
+    all_missing = {}
+    for ct, genes in markers.items():
+        if isinstance(genes, str):
+            genes = [genes]
+        present = [g for g in genes if g in varset]
+        miss = [g for g in genes if g not in varset]
+        if present:
+            filtered[ct] = present
+        if miss:
+            all_missing[ct] = miss
+    if all_missing:
+        print("Missing genes (ignored):")
+        for ct, lst in all_missing.items():
+            print(f"  {ct}: {', '.join(lst)}")
+    return filtered, all_missing

@@ -1,0 +1,131 @@
+# DGE Comparison Configuration
+# Each entry defines a pseudobulk DESeq2 comparison.
+# Set COMPARISON in the notebook to the key you want to run.
+#
+# Required fields:
+#   cell_type       - value in adata.obs["manual_label"]
+#   datasets        - list of dataset keys (from src.config.DATASETS)
+#   conditions_map  - maps substring in sample name -> condition label
+#   contrast        - [factor, tested, reference] for DESeq2
+#   title           - human-readable title for plots
+
+# ═══════════════════════════════════════════════════════════════
+# D2: Lapatinib vs Control
+# ═══════════════════════════════════════════════════════════════
+
+d2_lapa_iscs:
+  cell_type: ISCs
+  datasets: [D2_DZ, D2_Lapa]
+  conditions_map: {Lapa: Lapa, Dz: Dz}
+  contrast: [condition, Lapa, Dz]
+  title: "Day 2 ISCs: Lapatinib vs Control"
+
+d2_lapa_pcs:
+  cell_type: PCs
+  datasets: [D2_DZ, D2_Lapa]
+  conditions_map: {Lapa: Lapa, Dz: Dz}
+  contrast: [condition, Lapa, Dz]
+  title: "Day 2 PCs: Lapatinib vs Control"
+
+d2_lapa_prolif_pcs:
+  cell_type: Proliferating PCs
+  datasets: [D2_DZ, D2_Lapa]
+  conditions_map: {Lapa: Lapa, Dz: Dz}
+  contrast: [condition, Lapa, Dz]
+  title: "Day 2 Proliferating PCs: Lapatinib vs Control"
+
+d2_lapa_secretory_pcs:
+  cell_type: Secretory PCs
+  datasets: [D2_DZ, D2_Lapa]
+  conditions_map: {Lapa: Lapa, Dz: Dz}
+  contrast: [condition, Lapa, Dz]
+  title: "Day 2 Secretory PCs: Lapatinib vs Control"
+
+d2_lapa_enterocytes:
+  cell_type: Enterocytes
+  datasets: [D2_DZ, D2_Lapa]
+  conditions_map: {Lapa: Lapa, Dz: Dz}
+  contrast: [condition, Lapa, Dz]
+  title: "Day 2 Enterocytes: Lapatinib vs Control"
+
+# ═══════════════════════════════════════════════════════════════
+# D4: Lapatinib vs Control
+# ═══════════════════════════════════════════════════════════════
+
+d4_lapa_pcs:
+  cell_type: PCs
+  datasets: [D4_DZ, D4_Lapa]
+  conditions_map: {Lapa: Lapa, Dz: Dz}
+  contrast: [condition, Lapa, Dz]
+  title: "Day 4 PCs: Lapatinib vs Control"
+
+d4_lapa_enterocytes:
+  cell_type: Enterocytes
+  datasets: [D4_DZ, D4_Lapa]
+  conditions_map: {Lapa: Lapa, Dz: Dz}
+  contrast: [condition, Lapa, Dz]
+  title: "Day 4 Enterocytes: Lapatinib vs Control"
+
+d4_lapa_inflamed_secretory_pcs:
+  cell_type: Inflamed Secretory PCs
+  datasets: [D4_DZ, D4_Lapa]
+  conditions_map: {Lapa: Lapa, Dz: Dz}
+  contrast: [condition, Lapa, Dz]
+  title: "Day 4 Inflamed Secretory PCs: Lapatinib vs Control"
+
+d4_lapa_prolif_pcs:
+  cell_type: Proliferating PCs
+  datasets: [D4_DZ, D4_Lapa]
+  conditions_map: {Lapa: Lapa, Dz: Dz}
+  contrast: [condition, Lapa, Dz]
+  title: "Day 4 Proliferating PCs: Lapatinib vs Control"
+
+# ═══════════════════════════════════════════════════════════════
+# D4: Afatinib+SHP099 vs Control
+# ═══════════════════════════════════════════════════════════════
+
+d4_as_iscs:
+  cell_type: ISCs
+  datasets: [D4_DZ, D4_AS]
+  conditions_map: {AS: AS, Dz: Dz}
+  contrast: [condition, AS, Dz]
+  title: "Day 4 ISCs: AS vs Control"
+
+d4_as_pcs:
+  cell_type: PCs
+  datasets: [D4_DZ, D4_AS]
+  conditions_map: {AS: AS, Dz: Dz}
+  contrast: [condition, AS, Dz]
+  title: "Day 4 PCs: AS vs Control"
+
+d4_as_enterocytes:
+  cell_type: Enterocytes
+  datasets: [D4_DZ, D4_AS]
+  conditions_map: {AS: AS, Dz: Dz}
+  contrast: [condition, AS, Dz]
+  title: "Day 4 Enterocytes: AS vs Control"
+
+d4_as_prolif_pcs:
+  cell_type: Proliferating PCs
+  datasets: [D4_DZ, D4_AS]
+  conditions_map: {AS: AS, Dz: Dz}
+  contrast: [condition, AS, Dz]
+  title: "Day 4 Proliferating PCs: AS vs Control"
+
+d4_as_neurog3:
+  cell_type: NEUROG3+ progenitor cells
+  datasets: [D4_DZ, D4_AS]
+  conditions_map: {AS: AS, Dz: Dz}
+  contrast: [condition, AS, Dz]
+  title: "Day 4 NEUROG3+ PCs: AS vs Control"
+
+# ═══════════════════════════════════════════════════════════════
+# D10: Lapatinib vs Control
+# ═══════════════════════════════════════════════════════════════
+
+d10_lapa_iscs:
+  cell_type: ISCs
+  datasets: [G6, D10_Lapa]
+  conditions_map: {Lapa: Lapa, Dz: Dz}
+  contrast: [condition, Lapa, Dz]
+  title: "Day 10 ISCs: Lapatinib vs Control"

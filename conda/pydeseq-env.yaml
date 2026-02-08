@@ -1,0 +1,38 @@
+# PyDESeq2 environment for pseudobulk DGE analysis.
+#
+# A pre-built packed version of this environment is available as a
+# release asset on the project's GitHub remote:
+#   pydeseq-env-osx-arm64.tar.gz
+#
+# To install from the release asset (faster):
+#   mkdir -p ~/envs/pydeseq-env
+#   tar -xzf pydeseq-env-osx-arm64.tar.gz -C ~/envs/pydeseq-env
+#   conda activate ~/envs/pydeseq-env
+#   conda-unpack
+#
+# To create from this spec (rebuilds from scratch):
+#   conda env create -f conda/pydeseq-env.yaml
+#
+# Notebooks that need this env:
+#   - notebooks/dge/pseudobulk_deseq2.ipynb
+name: pydeseq-env
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.11
+  - numpy
+  - pandas
+  - scipy
+  - matplotlib
+  - seaborn
+  - scanpy>=1.10
+  - anndata
+  - h5py
+  - pyyaml
+  - jupyterlab
+  - ipykernel
+  - pip
+  - pip:
+    - pydeseq2

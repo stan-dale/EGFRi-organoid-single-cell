@@ -1,3 +1,12 @@
+# Full pinned export of the main single-cell analysis environment.
+# For a minimal (recreatable) spec, see single-cell-env-minimal.yaml.
+#
+# Used by: Steps 0-5 notebooks (QC, Clustering, CellAssign, Labelling, Plotting)
+# Includes scvi-tools for CellAssign.
+#
+# To pack for distribution:
+#   conda pack -n single-cell-env -o conda/egfr-single-cell-<version>.tar.gz
+#
 name: single-cell-env
 channels:
   - conda-forge

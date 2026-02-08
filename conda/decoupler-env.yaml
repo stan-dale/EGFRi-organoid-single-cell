@@ -1,0 +1,32 @@
+# Decoupler environment for TF activity and enrichment analysis.
+#
+# Used by decoupler/enrichment notebooks (steps 6-7).
+#
+# Create with:
+#   conda env create -f conda/decoupler-env.yaml
+#
+# To pack for distribution:
+#   conda pack -n decoupler-env -o conda/decoupler-env-osx-arm64.tar.gz
+name: decoupler-env
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.11
+  - numpy
+  - pandas
+  - scipy
+  - matplotlib
+  - seaborn
+  - scanpy>=1.10
+  - anndata
+  - leidenalg
+  - igraph
+  - h5py
+  - jupyterlab
+  - ipykernel
+  - pip
+  - pip:
+    - decoupler
+    - gseapy
