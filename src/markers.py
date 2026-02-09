@@ -66,6 +66,46 @@ cell_cycle_markers = {
 
 # ── Utility ──
 
+# ── Pathway gene sets (used by GSEA enrichment notebooks) ──
+
+pathway_gene_sets = {
+    "EGFR_SIGNALING": [
+        "EGFR", "ERBB2", "ERBB3", "ERBB4",
+        "GRB2", "SOS1", "SOS2",
+        "KRAS", "HRAS", "NRAS",
+        "RAF1", "BRAF", "ARAF",
+        "MAP2K1", "MAP2K2",
+        "MAPK1", "MAPK3",
+        "ELK1", "FOS", "JUN",
+        "PIK3CA", "PIK3CB", "PIK3CD",
+        "AKT1", "AKT2", "AKT3",
+        "MTOR", "RPS6KB1",
+        "STAT3", "STAT5A", "STAT5B",
+    ],
+    "INTERFERON_ALPHA_RESPONSE": [
+        "STAT1", "STAT2", "IRF9",
+        "IRF1", "IRF2", "IRF3", "IRF7",
+        "ISG15", "ISG20", "IFIT1", "IFIT2", "IFIT3",
+        "IFITM1", "IFITM2", "IFITM3",
+        "MX1", "MX2",
+        "OAS1", "OAS2", "OAS3",
+        "RSAD2", "IFI6", "IFI27", "IFI35", "IFI44",
+        "IFIH1", "DDX58",
+    ],
+    "INTERFERON_GAMMA_RESPONSE": [
+        "STAT1", "IRF1", "IRF8",
+        "GBP1", "GBP2", "GBP3", "GBP4", "GBP5",
+        "CXCL9", "CXCL10", "CXCL11",
+        "IDO1", "IDO2",
+        "HLA-A", "HLA-B", "HLA-C",
+        "HLA-DRA", "HLA-DRB1", "HLA-DQA1",
+        "B2M", "TAP1", "TAP2",
+        "PSMB8", "PSMB9", "PSMB10",
+        "CIITA", "CD274", "PDCD1LG2",
+    ],
+}
+
+
 def filter_present_genes(adata, gene_list):
     """
     Return only genes from *gene_list* that exist in *adata.var_names*.

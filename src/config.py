@@ -30,6 +30,9 @@ CELLASSIGN_DIR = ANALYSIS_DIR / "cellassign_objects"
 DGE_INPUT_DIR = DATA_DIR / "dge" / "pseudobulk-csvs"
 DGE_OUTPUT_DIR = DATA_DIR / "dge" / "pydeseq-output"
 
+# ── GSEA paths ──
+GSEA_OUTPUT_DIR = DATA_DIR / "gsea" / "gseapy-output"
+
 # ── Dataset registry ──
 # Maps dataset key -> dict with h5ad paths for different processing stages.
 # Not all stages exist for every dataset.
