@@ -23,6 +23,8 @@ cell_type_markers = {
 EEC_markers = {
     "NEUROG3+ PCs": "NEUROG3",
     "Early EECs": ["HES1", "ASCL2", "ATOH1", "PAX4"],
+    "Pre EECs": ["HES6", "ASCL1"],
+    "T4 cells": ["PAX6", "PDX1"],
     "X cells": "GHRL",
     "D cells": "SST",
     "I cells": "CCK",
