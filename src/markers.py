@@ -8,7 +8,7 @@ Centralises all marker dictionaries used across the project's notebooks.
 # ── Main epithelial cell type markers (used by CellAssign & dotplots) ──
 
 cell_type_markers = {
-    "ISCs": ["LGR5", "AXIN2", "ASCL2"],
+    "ISCs": ["LGR5", "AXIN2", "ASCL2", "OLFM4"],
     "PCs": ["DLL1", "NEUROG3", "CD44"],
     "Proliferating PCs": ["DLL1", "NEUROG3", "CD44", "MKI67"],
     "Secretory PCs": ["NEUROG3", "INSM1", "NEUROD1", "SOX4", "ATOH1"],
