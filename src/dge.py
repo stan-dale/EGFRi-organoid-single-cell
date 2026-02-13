@@ -8,7 +8,6 @@ Designed to be driven by a single parameterised notebook + YAML config.
 import numpy as np
 import pandas as pd
 import scanpy as sc
-import matplotlib.pyplot as plt
 from scipy.sparse import issparse
 from pathlib import Path
 
@@ -166,70 +165,26 @@ def run_pydeseq2(counts_df, clinical_df, contrast, design="condition"):
     return stats.results_df
 
 
-# ── Volcano plot ──
+# ── Volcanoser prep ──
 
-def plot_volcano(
-    results_df,
-    title,
-    top_n=20,
-    lfc_thresh=1.0,
-    padj_thresh=0.05,
-    save=None,
-):
+def prepare_for_volcanoser(results_df):
     """
-    Volcano plot from DESeq2 results.
+    Add neg-log10 columns to PyDESeq2 results for use with Volcanoser.
+
+    Computes ``neg_log10_pvalue`` and ``neg_log10_padj`` from the raw
+    *pvalue* and *padj* columns.  NaN inputs produce NaN outputs.
 
     Parameters
     ----------
     results_df : DataFrame
-        Must have 'log2FoldChange' and 'padj' columns.
-    title : str
-    top_n : int
-        Number of top up/down genes to label.
-    lfc_thresh : float
-    padj_thresh : float
-    save : str or Path, optional
+        PyDESeq2 results with 'pvalue' and 'padj' columns.
 
     Returns
     -------
-    fig : Figure
+    DataFrame
+        Copy of *results_df* with two extra columns appended.
     """
-    df = results_df.dropna(subset=["log2FoldChange", "padj"]).copy()
-    df["-log10padj"] = -np.log10(df["padj"])
-
-    sig = (df["padj"] < padj_thresh) & (df["log2FoldChange"].abs() > lfc_thresh)
-
-    top_up = df[df["log2FoldChange"] > 0].sort_values("padj").head(top_n)
-    top_down = df[df["log2FoldChange"] < 0].sort_values("padj").head(top_n)
-
-    fig, ax = plt.subplots(figsize=(8, 7))
-
-    ax.scatter(
-        df.loc[~sig, "log2FoldChange"], df.loc[~sig, "-log10padj"],
-        color="lightgray", alpha=0.6, s=12,
-    )
-    ax.scatter(
-        df.loc[sig, "log2FoldChange"], df.loc[sig, "-log10padj"],
-        color="red", alpha=0.7, s=16,
-    )
-
-    ax.axhline(-np.log10(padj_thresh), linestyle="--", color="black", linewidth=0.8)
-    ax.axvline(lfc_thresh, linestyle="--", color="black", linewidth=0.8)
-    ax.axvline(-lfc_thresh, linestyle="--", color="black", linewidth=0.8)
-
-    for gene, row in top_up.iterrows():
-        ax.text(row["log2FoldChange"], row["-log10padj"], gene,
-                fontsize=8, color="blue", ha="left", va="bottom")
-    for gene, row in top_down.iterrows():
-        ax.text(row["log2FoldChange"], row["-log10padj"], gene,
-                fontsize=8, color="green", ha="right", va="bottom")
-
-    ax.set_xlabel("log2 Fold Change")
-    ax.set_ylabel("-log10 adjusted p-value")
-    ax.set_title(title)
-    plt.tight_layout()
-
-    if save:
-        fig.savefig(save, dpi=300, bbox_inches="tight")
-    plt.show()
-    return fig
+    df = results_df.copy()
+    df["neg_log10_pvalue"] = -np.log10(df["pvalue"])
+    df["neg_log10_padj"] = -np.log10(df["padj"])
+    return df
