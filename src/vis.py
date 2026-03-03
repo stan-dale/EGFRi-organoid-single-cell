@@ -177,17 +177,31 @@ class CoreColors:
 core_colors = CoreColors()
 
 # -------------------- label params (you can fully customize) --------------------
-def make_label_params(category_names):
+def make_label_params(category_names, palette=None):
     """
     Build a label->dict(color, short_label) map deterministically from the
     Veres palettes. Edit this to hard-code exact colors if desired.
+
+    Parameters
+    ----------
+    category_names : list[str]
+    palette : dict, optional
+        {label: hex_color} to override specific label colors (e.g. celltype_palette).
+        Labels not in the dict fall back to the Veres color cycle.
     """
-    palette = (
+    from matplotlib.colors import to_rgb
+    fallback = (
         Set1_9.colors + Paired_10.colors[::2] + Set2_8.colors
     )
     lp = OrderedDict()
-    for name, col in zip(category_names, palette):
-        lp[name] = dict(color=_col(col), short_label=name)
+    fb_i = 0
+    for name in category_names:
+        if palette is not None and name in palette:
+            col = np.array(to_rgb(palette[name]))
+        else:
+            col = _col(fallback[fb_i % len(fallback)])
+            fb_i += 1
+        lp[name] = dict(color=col, short_label=name)
     return lp
 
 # -------------------- identical logic: sort to put homogeneous neighborhoods on top --------------------
@@ -211,6 +225,7 @@ def plot_veres_panel(
     stage_text=None,           # e.g. "D10_Lapa"
     ratio_order=None,          # list specifying order in pop-bar (optional)
     label_order=None,          # legend order (optional)
+    palette=None,              # dict {label: hex_color} e.g. celltype_palette
     save=None,                 # path to .pdf/.png
     dpi=600
 ):
@@ -220,7 +235,7 @@ def plot_veres_panel(
     cats = list(pd.unique(labels)) if label_order is None else label_order
 
     # label params (color + short label)
-    lp = make_label_params(cats)
+    lp = make_label_params(cats, palette=palette)
 
     # ===== panel sizing exactly like their notebook =====
     mm_per_inch = 25.4
@@ -295,6 +310,7 @@ def plot_veres_panel_highlight(
     label_key,
     highlight_label,
     stage_text=None,
+    palette=None,              # dict {label: hex_color} e.g. celltype_palette
     save=None,
     dpi=600,
     bg_color=np.array([0.8, 0.8, 0.8]),   # soft grey background
@@ -305,7 +321,7 @@ def plot_veres_panel_highlight(
     X = adata.obsm['X_umap']
     labels = adata.obs[label_key].astype(str).values
     cats = list(pd.unique(labels))
-    lp = make_label_params(cats)
+    lp = make_label_params(cats, palette=palette)
 
     # --- Veres figure geometry ---
     mm_per_inch = 25.4
@@ -335,12 +351,21 @@ def plot_veres_panel_highlight(
     ax.text(xl_text, yl(li), highlight_label, va="center", fontsize=5, clip_on=False)
 
     # === right column: UMAP (grey background + color highlight) ===
-    proj, rgb = prepare_for_scatter(X, labels, lp)
+    # Sort by neighborhood homogeneity (same logic as prepare_for_scatter)
+    # but keep labels aligned with sorted coordinates
+    labels_arr = np.asarray(labels)
+    nbrs = NearestNeighbors(n_neighbors=5, algorithm='ball_tree').fit(X)
+    knn = nbrs.kneighbors(X, return_distance=False)
+    same = (labels_arr[knn].T == labels_arr[knn[:, 0]]).mean(0)
+    order = np.argsort(same)
+    proj = X[order]
+    sorted_labels = labels_arr[order]
+
     ax = fig.add_subplot(gs[0, 1], xticks=[], yticks=[], frameon=False)
     ax.patch.set_visible(False)
 
-    # masks
-    mask_high = labels == highlight_label
+    # masks on the sorted arrays
+    mask_high = sorted_labels == highlight_label
     mask_bg = ~mask_high
 
     s_black, s_white, s_type = 4, 2, 1.5

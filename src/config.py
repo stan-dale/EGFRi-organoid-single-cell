@@ -26,6 +26,10 @@ MANUAL_LABELLED_DIR = ANALYSIS_DIR / "manual_labelled"
 MANUAL_LABELLED_2_DIR = ANALYSIS_DIR / "manual_labelled_2"
 CELLASSIGN_DIR = ANALYSIS_DIR / "cellassign_objects"
 
+# ── CellRank paths ──
+CELLRANK_DIR = ANALYSIS_DIR / "cellrank"
+CELLRANK_FIGURES_DIR = FIGURES_DIR / "cellrank"
+
 # ── DGE paths ──
 DGE_INPUT_DIR = DATA_DIR / "dge" / "pseudobulk-csvs"
 DGE_OUTPUT_DIR = DATA_DIR / "dge" / "pydeseq-output"
@@ -70,7 +74,7 @@ DATASETS = {
     "D10_Lapa": {
         "raw": DATA_DIR / "egfDuod_D10_Lapa_DZ.h5ad",
         "clustered": ANALYSIS_DIR / "clustered_egfDuod_D10_Lapa_DZ.h5ad",
-        "labelled": MANUAL_LABELLED_DIR / "d10_lapa_manual_labels.h5ad",
+        "labelled": CELLASSIGN_DIR / "d10_lapa_predictions.h5ad",
         "condition": "Lapa",
     },
     "G6": {
