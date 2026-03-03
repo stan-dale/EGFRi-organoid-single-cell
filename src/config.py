@@ -1,10 +1,13 @@
 """
 Project paths and dataset registry for the Breault Lab single-cell project.
 
-Usage from any notebook:
+Usage from any notebook (works regardless of CWD):
     import sys
     from pathlib import Path
-    sys.path.insert(0, str(Path("../..").resolve()))
+    _p = Path(".").resolve()
+    while not (_p / "src" / "config.py").exists() and _p != _p.parent:
+        _p = _p.parent
+    sys.path.insert(0, str(_p))
     from src.config import *
 """
 
