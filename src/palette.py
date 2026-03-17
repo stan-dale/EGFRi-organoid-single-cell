@@ -11,7 +11,7 @@ Handles inconsistent naming (e.g. "Inflammed" vs "Inflamed",
 _CANONICAL_PALETTE = {
     "ISCs":                       "#7f7f7f",
     "PCs":                        "#1ce6ff",
-    "Secretory PCs":              "#355fdb",
+    "Secretory PCs":              "#00897b",
     "Proliferating PCs":          "#ff4a46",
     "Inflamed Secretory PCs":     "#355fdb",
     "Enterocytes":                "#ffff00",

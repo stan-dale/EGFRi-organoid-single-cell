@@ -20,7 +20,7 @@ def run_decoupler_safe(
     celltype_key="manual_label",
     tmin=25,
     use_hvg=True,
-    max_genes=3000,
+    max_genes=5000,
 ):
     """
     Run decoupler ULM with HVG filtering and memory management.
