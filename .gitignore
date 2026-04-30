@@ -9,6 +9,26 @@ analysis/
 data/
 dropbox-data/
 
+# === Figures (working set; only docs/eec_subtypes_v{3,5}.png banner images are tracked) ===
+figures/
+
+# === Local archive (history of dead-end + superseded work, kept locally only) ===
+archive/
+
+# === Local-only project instructions (CLAUDE.md at any depth) ===
+CLAUDE.md
+**/CLAUDE.md
+
+# === HPC pipeline (cluster-only, not synced via git) ===
+hpc/
+
+# === Notebook 9 — IFN pseudotime, not for clone reproduction ===
+notebooks/d10-lapa/9_EEC_interferon_pseudotime.ipynb
+
+# === Loose exploratory plots in d10-lapa/ (threshold tuning, EEC variants) ===
+notebooks/d10-lapa/*.png
+notebooks/d10-lapa/*.pdf
+
 # === Claude analysis outputs (large scored files) ===
 claude/decoupler/
 claude/enrichment/
@@ -19,6 +39,7 @@ more-egfr-singlecell/
 
 # === Anaconda project databases ===
 anaconda_projects/db/
+notebooks/anaconda_projects/
 
 # === Python ===
 __pycache__/

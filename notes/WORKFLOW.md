@@ -8,13 +8,13 @@ This project analyses **scRNA-seq data from human duodenal organoids** treated w
 
 | Key        | Timepoint | Condition            | Description                          |
 |------------|-----------|----------------------|--------------------------------------|
-| **D2_DZ**  | Day 2     | DMSO (control)       | Vehicle control                      |
+| **D2_DZ**  | Day 2     | DZ (control)         | Control (named after Daniel Zeve)     |
 | **D2_Lapa**| Day 2     | Lapatinib            | EGFR/HER2 dual inhibitor             |
-| **D4_DZ**  | Day 4     | DMSO (control)       | Vehicle control                      |
+| **D4_DZ**  | Day 4     | DZ (control)         | Control (named after Daniel Zeve)     |
 | **D4_Lapa**| Day 4     | Lapatinib            | EGFR/HER2 dual inhibitor             |
-| **D4_AS**  | Day 4     | Afatinib + SHP099    | Pan-ERBB + SHP2 inhibitor combo      |
+| **D4_AS**  | Day 4     | AS1842856            | FOXO1 inhibitor                       |
 | **D10_Lapa**| Day 10   | Lapatinib            | EGFR/HER2 dual inhibitor             |
-| **G6**     | Day 10    | DMSO (control)       | Vehicle control for D10               |
+| **G6**     | Day 10    | Control              | Control for D10                       |
 
 ### Cell Types Identified
 
