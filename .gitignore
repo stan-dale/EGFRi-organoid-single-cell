@@ -21,6 +21,9 @@ CLAUDE.md
 
 # === HPC pipeline (cluster-only, not synced via git) ===
 hpc/
+# Exception: shared HPC submit scripts for the D2/D4 transfer-learning pipeline.
+!notebooks/d2-d4-integrated/hpc/
+!notebooks/d2-d4-integrated/hpc/**
 
 # === Notebook 9 — IFN pseudotime, not for clone reproduction ===
 notebooks/d10-lapa/9_EEC_interferon_pseudotime.ipynb
