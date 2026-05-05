@@ -43,6 +43,9 @@ GSEA_OUTPUT_DIR = ANALYSIS_FILES_DIR / "gsea" / "gseapy-output"
 CELLRANK_DIR = DATA_OBJECTS_DIR / "cellrank"
 CELLRANK_FIGURES_DIR = FIGURES_DIR / "cellrank"
 
+# ── Integration / transfer-learning paths ──
+INTEGRATION_DIR = DATA_OBJECTS_DIR / "integration"
+
 # ── Backwards compatibility ──
 ANALYSIS_DIR = DATA_DIR
 
