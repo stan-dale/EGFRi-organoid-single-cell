@@ -152,9 +152,20 @@ def main():
     print("leiden cluster sizes:")
     print(adata.obs["leiden"].value_counts().sort_index().to_string())
 
-    banner("leiden × dataset cross-tab (treatment composition per cluster)")
     import pandas as pd
+    banner("leiden × dataset cross-tab (treatment composition per cluster)")
     print(pd.crosstab(adata.obs["leiden"], adata.obs["dataset"]).to_string())
+
+    banner("leiden × participant cross-tab (BATCH-CORRECTION diagnostic)")
+    # If donors mix within clusters, scVI integrated them. A cluster that is
+    # ~100% one donor is under-corrected. NB: H439 is Lapa-only and H897 is
+    # DZ-only at D2, so a donor-pure cluster can still be real biology.
+    ct_part = pd.crosstab(adata.obs["leiden"], adata.obs[BATCH_KEY])
+    print(ct_part.to_string())
+    # Per-cluster dominant-donor fraction — quick "is anything donor-pure?" scan
+    frac = ct_part.div(ct_part.sum(axis=1), axis=0)
+    print("\nmax single-donor fraction per cluster (closer to 1.0 = less mixed):")
+    print(frac.max(axis=1).round(2).to_string())
 
     banner(f"write {out_path}")
     adata.uns["unified_integration"] = {
