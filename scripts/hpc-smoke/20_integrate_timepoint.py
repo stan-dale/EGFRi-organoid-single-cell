@@ -79,16 +79,22 @@ def run_leiden(adata, resolution, key="leiden"):
 def resolve_batch_key(adata, batch_key):
     """Resolve BATCH_KEY into a single obs column for scVI.
 
-    A comma-separated value (e.g. "participant,dataset") builds a composite
-    column joining those fields — i.e. correct per-library/per-sample, which
-    removes the treatment-level (capture) batch as well as donor. Use this to
-    "integrate to label": align the same cell types across DZ/Lapa so clusters
-    reflect cell identity, not capture. NB the treatment effect then lives in
-    cell-type proportions + DE on counts, NOT in the embedding.
+    A multi-field value (e.g. "participant+dataset" or "participant,dataset")
+    builds a composite column joining those fields — i.e. correct
+    per-library/per-sample, which removes the treatment-level (capture) batch as
+    well as donor. Use this to "integrate to label": align the same cell types
+    across DZ/Lapa so clusters reflect cell identity, not capture. NB the
+    treatment effect then lives in cell-type proportions + DE on counts, NOT in
+    the embedding.
+
+    Accepts '+', ',' or ':' as the field delimiter — prefer '+' on the command
+    line, since SLURM's --export treats commas as its own separator.
     """
-    if "," not in batch_key:
+    import re
+    parts = [p.strip() for p in re.split(r"[,+:]", batch_key) if p.strip()]
+    if len(parts) <= 1:
         return batch_key
-    cols = [c.strip() for c in batch_key.split(",")]
+    cols = parts
     missing = [c for c in cols if c not in adata.obs.columns]
     if missing:
         sys.exit(f"BATCH_KEY columns missing from obs: {missing}")
