@@ -76,6 +76,32 @@ def run_leiden(adata, resolution, key="leiden"):
         sc.tl.leiden(adata, resolution=resolution, key_added=key)
 
 
+def resolve_batch_key(adata, batch_key):
+    """Resolve BATCH_KEY into a single obs column for scVI.
+
+    A comma-separated value (e.g. "participant,dataset") builds a composite
+    column joining those fields — i.e. correct per-library/per-sample, which
+    removes the treatment-level (capture) batch as well as donor. Use this to
+    "integrate to label": align the same cell types across DZ/Lapa so clusters
+    reflect cell identity, not capture. NB the treatment effect then lives in
+    cell-type proportions + DE on counts, NOT in the embedding.
+    """
+    if "," not in batch_key:
+        return batch_key
+    cols = [c.strip() for c in batch_key.split(",")]
+    missing = [c for c in cols if c not in adata.obs.columns]
+    if missing:
+        sys.exit(f"BATCH_KEY columns missing from obs: {missing}")
+    composite = "batch_composite"
+    adata.obs[composite] = (
+        adata.obs[cols].astype(str).agg("|".join, axis=1).astype("category")
+    )
+    print(f"composite batch '{composite}' = {' | '.join(cols)}  "
+          f"({adata.obs[composite].nunique()} levels)")
+    print(adata.obs[composite].value_counts().to_string())
+    return composite
+
+
 def main():
     timepoint = (sys.argv[1] if len(sys.argv) > 1
                  else os.environ.get("TIMEPOINT", "")).upper()
@@ -107,19 +133,21 @@ def main():
     print(f"subset: {adata.shape}")
     print("dataset counts:")
     print(adata.obs["dataset"].value_counts().to_string())
-    print(f"\n{BATCH_KEY} counts:")
-    print(adata.obs[BATCH_KEY].value_counts().to_string())
     if "counts" not in adata.layers:
         sys.exit("ERROR: layers['counts'] missing — required for scVI.")
 
-    banner(f"select top {N_HVG} HVGs (seurat_v3, counts, batch-aware on {BATCH_KEY})")
+    banner(f"resolve batch key (requested BATCH_KEY={BATCH_KEY!r})")
+    batch_key = resolve_batch_key(adata, BATCH_KEY)
+    print(f"scVI will batch-correct on: {batch_key}")
+
+    banner(f"select top {N_HVG} HVGs (seurat_v3, counts, batch-aware on {batch_key})")
     t0 = time.time()
     sc.pp.highly_variable_genes(
         adata,
         n_top_genes=N_HVG,
         flavor="seurat_v3",
         layer="counts",
-        batch_key=BATCH_KEY,
+        batch_key=batch_key,
         subset=False,          # keep full gene set in the saved object
     )
     n_hvg = int(adata.var["highly_variable"].sum())
@@ -127,7 +155,7 @@ def main():
 
     banner("train scVI on the HVG subset")
     adata_hvg = adata[:, adata.var["highly_variable"]].copy()
-    scvi.model.SCVI.setup_anndata(adata_hvg, layer="counts", batch_key=BATCH_KEY)
+    scvi.model.SCVI.setup_anndata(adata_hvg, layer="counts", batch_key=batch_key)
     vae = scvi.model.SCVI(adata_hvg, n_latent=N_LATENT, n_layers=N_LAYERS)
     t0 = time.time()
     vae.train(
@@ -160,12 +188,16 @@ def main():
     # If donors mix within clusters, scVI integrated them. A cluster that is
     # ~100% one donor is under-corrected. NB: H439 is Lapa-only and H897 is
     # DZ-only at D2, so a donor-pure cluster can still be real biology.
-    ct_part = pd.crosstab(adata.obs["leiden"], adata.obs[BATCH_KEY])
+    ct_part = pd.crosstab(adata.obs["leiden"], adata.obs["participant"])
     print(ct_part.to_string())
     # Per-cluster dominant-donor fraction — quick "is anything donor-pure?" scan
     frac = ct_part.div(ct_part.sum(axis=1), axis=0)
     print("\nmax single-donor fraction per cluster (closer to 1.0 = less mixed):")
     print(frac.max(axis=1).round(2).to_string())
+
+    # When integrating per-library (BATCH_KEY=participant,dataset) the point is
+    # that the SAME cell type now co-clusters across DZ/Lapa, so the leiden ×
+    # dataset table above should look MORE mixed than the donor-only run.
 
     banner(f"write {out_path}")
     adata.uns["unified_integration"] = {
@@ -175,7 +207,8 @@ def main():
         "n_latent": N_LATENT,
         "n_layers": N_LAYERS,
         "scvi_epochs": SCVI_EPOCHS,
-        "batch_key": BATCH_KEY,
+        "batch_key_requested": BATCH_KEY,
+        "batch_key_used": batch_key,
         "leiden_resolution": LEIDEN_RES,
         "n_neighbors": N_NEIGHBORS,
         "seed": SEED,
