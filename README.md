@@ -1,7 +1,7 @@
 # EGFR Inhibition Promotes Enteroendocrine Cell Differentiation 
 
 <p align="left">
-  <img src="docs/eec_subtypes_v3.png" alt="D10 Lapatinib EEC subtypes" width="600">
+  <img src="docs/eec_subtypes_v5.png" alt="D10 Lapatinib EEC subtypes" width="600">
 </p>
 
 
