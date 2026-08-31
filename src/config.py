@@ -19,8 +19,11 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 # ── Standard directories ──
 DATA_DIR = PROJECT_ROOT / "data"
 FIGURES_DIR = PROJECT_ROOT / "figures"
-UTILITIES_DIR = PROJECT_ROOT / "utilities"
 NOTEBOOKS_DIR = PROJECT_ROOT / "notebooks"
+
+# Tracked reference inputs (marker matrices, annotation tables). Unlike DATA_DIR
+# these are not derived and cannot be regenerated, so they live in git.
+RESOURCES_DIR = PROJECT_ROOT / "resources"
 
 # ── Data subdirectories ──
 DATA_OBJECTS_DIR = DATA_DIR / "data-objects"

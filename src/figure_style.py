@@ -1,16 +1,13 @@
 """
-figure_style — matplotlib/scanpy figures pre-shaped for the lab's Figma slide template.
+figure_style — matplotlib/scanpy figures pre-shaped for Figma slide dimenstions.
 
-The slide deck has two standardized image slots in Figma, with two fixed aspect
-ratios. This module produces matplotlib figures sized exactly to those slots, with
+This module produces matplotlib figures sized exactly to the pixel slots I define, with
 transparent backgrounds and projection-readable fonts, so a saved PNG drops into
-the slot without rescaling (which would otherwise distort UMAPs / blur text).
+the slot without rescaling.
 
 Two slots (inches), see ``SLOT``:
   - "single" (10.32 x 7.78, ~4:3)   -> 2064 x 1556 px at dpi=200  — one figure
   - "wide"   (15.00 x 7.00, ~2.14:1) -> 3000 x 1400 px at dpi=200  — wide composites
-
-These are double the on-slide pixel density, so they stay crisp at both 1080p and 4K.
 
 Typical use:
     import figure_style as fs
@@ -37,16 +34,14 @@ import matplotlib.font_manager as fm
 # 1. Slot dimensions (inches). At dpi=200 -> 2064x1556 and 3000x1400 px.
 # --------------------------------------------------------------------------- #
 SLOT = {
-    "single": (10.32, 7.78),  # 4:3-ish — for one figure (UMAP, ROC, heatmap)
-    "wide":   (15.00, 7.00),  # 2.14:1 — for wide composites (two UMAPs side by side)
+    "single": (10.32, 7.78),  
+    "wide":   (15.00, 7.00),  
 }
 
 _STYLE_APPLIED = False
 
 
-# --------------------------------------------------------------------------- #
-# Font discovery — prefer Inter, fall back silently to Arial.
-# --------------------------------------------------------------------------- #
+
 def _inter_available() -> bool:
     """True if an 'Inter' font is usable, registering it with matplotlib if needed."""
     # Already known to matplotlib's font cache?
@@ -73,9 +68,7 @@ def _inter_available() -> bool:
     return False
 
 
-# --------------------------------------------------------------------------- #
-# 2. setup_style — projection-readable academic-slide rcParams (idempotent).
-# --------------------------------------------------------------------------- #
+
 def setup_style() -> None:
     """Apply slide-friendly matplotlib rcParams. Safe to call repeatedly."""
     global _STYLE_APPLIED

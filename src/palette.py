@@ -56,3 +56,26 @@ celltype_palette = {}
 celltype_palette.update(_CANONICAL_PALETTE)
 for alias, canonical in _ALIASES.items():
     celltype_palette[alias] = _CANONICAL_PALETTE[canonical]
+
+
+# ── EEC subtype palette (D10 Lapa sub-analysis) ──
+#
+# Frozen from the Set1_9 cycle the sub-analysis originally derived colours from,
+# so the granular panels are unchanged. Enterochromaffin is pinned to orange in
+# every figure, including the coarse two-way split where position alone had made
+# it blue. Early EECs are grey to read as an immature, unresolved state.
+
+eec_palette = {
+    "X cells":                "#e41a1c",
+    "D cells":                "#377eb8",
+    "I cells":                "#4daf4a",
+    "K cells":                "#984ea3",
+    "Enterochromaffin cells": "#ff7f00",
+    "EC cells":               "#ff7f00",
+    "Early EECs":             "#999999",
+    # Coarse two-way split
+    "Peptide EECs":   "#999999",
+    # Intermediate labels, reassigned before the final call
+    "ARX+ cells":             "#f781bf",
+    "NEUROG3+ PCs":           "#a65628",
+}

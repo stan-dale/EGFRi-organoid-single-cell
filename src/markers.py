@@ -1,8 +1,20 @@
 """
 Marker gene definitions for cell type identification.
 
-Centralises all marker dictionaries used across the project's notebooks.
+Centralises the marker dictionaries used across the project's notebooks, plus a
+loader for the CellAssign marker matrices in resources/cellassign/. Those CSVs
+are the exact model inputs behind the published labels, so they are the record
+and the dicts below are for visualisation — the two are allowed to differ.
 """
+
+import pandas as pd
+
+from .config import RESOURCES_DIR
+
+
+def load_cellassign_matrix(name: str) -> pd.DataFrame:
+    """Load a binary gene x cell-type marker matrix from resources/cellassign/."""
+    return pd.read_csv(RESOURCES_DIR / "cellassign" / f"{name}.csv", index_col=0)
 
 
 # ── Main epithelial cell type markers (used by CellAssign & dotplots) ──
@@ -30,6 +42,17 @@ EEC_markers = {
     "I cells": "CCK",
     "K cells": "GIP",
     "Enterochromaffin cells": ["CHGA", "CHGB", "SLC18A1", "LMX1A"],
+}
+
+
+# ── EEC hormone panels (the marker UMAPs in the EEC sub-analysis) ──
+
+EEC_marker_panels = {
+    "Enterochromaffin": ["CHGA", "TPH1", "NEUROD1", "SLC18A1", "LMX1A"],
+    "Peptide hormones": ["ARX", "MLN", "GHRL", "GIP", "CCK"],
+    "More peptide hormones": ["GCG", "PYY", "SST", "GAST", "NTS"],
+    "Progenitor": ["NEUROG3", "CHGB", "PAX4"],
+    "Cofactors": ["PERCC1", "FAM181B"],
 }
 
 
