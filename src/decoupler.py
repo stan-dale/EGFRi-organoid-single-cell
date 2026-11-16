@@ -12,7 +12,7 @@ import numpy as np
 import scanpy as sc
 import decoupler as dc
 
-from src.palette import celltype_palette
+from .palette import celltype_palette
 
 
 def run_decoupler_safe(

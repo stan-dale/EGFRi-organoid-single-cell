@@ -11,6 +11,8 @@ import scanpy as sc
 from scipy.sparse import issparse
 from pathlib import Path
 
+from .palette import normalize_celltype_name
+
 
 # ── Pseudobulk creation ──
 
@@ -51,10 +53,15 @@ def create_pseudobulk(
     mask = ~adata.obs[participant_key].isin(exclude_participants)
     ad = adata[mask].copy()
 
-    # Subset to cell type
-    sub = ad[ad.obs[label_key] == cell_type].copy()
+    # Subset to cell type. Labels are compared after alias normalisation, because
+    # the labelling notebooks spell some types differently across datasets
+    # (e.g. "Secretory progenitor cells" in D2_Lapa vs "Secretory PCs" elsewhere).
+    labels = ad.obs[label_key].astype(str).map(normalize_celltype_name)
+    sub = ad[(labels == normalize_celltype_name(cell_type)).to_numpy()].copy()
     if sub.n_obs == 0:
-        raise ValueError(f"No cells found for {label_key}=={cell_type!r}")
+        present = sorted(ad.obs[label_key].astype(str).unique())
+        raise ValueError(f"No cells found for {label_key}=={cell_type!r}. "
+                         f"Labels present: {present}")
 
     sub.obs["pb_id"] = (
         sub.obs[participant_key].astype(str)
@@ -152,10 +159,12 @@ def run_pydeseq2(counts_df, clinical_df, contrast, design="condition"):
     from pydeseq2.dds import DeseqDataSet
     from pydeseq2.ds import DeseqStats
 
+    # `design="~condition"` is what PyDESeq2 builds internally from the older
+    # `design_factors="condition"` argument, which is deprecated since 0.5.
     dds = DeseqDataSet(
         counts=counts_df,
         metadata=clinical_df,
-        design_factors=design,
+        design=f"~{design}",
     )
     dds.deseq2()
 

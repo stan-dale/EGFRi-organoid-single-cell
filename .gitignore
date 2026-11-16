@@ -52,6 +52,9 @@ build/
 # === Jupyter ===
 .ipynb_checkpoints/
 
+# === Tests ===
+.pytest_cache/
+
 # === macOS ===
 .DS_Store
 *DS_Store

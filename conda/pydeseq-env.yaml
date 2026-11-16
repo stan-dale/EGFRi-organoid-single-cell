@@ -35,4 +35,4 @@ dependencies:
   - ipykernel
   - pip
   - pip:
-    - pydeseq2
+    - pydeseq2>=0.5

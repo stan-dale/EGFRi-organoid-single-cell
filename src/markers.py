@@ -9,12 +9,12 @@ and the dicts below are for visualisation — the two are allowed to differ.
 
 import pandas as pd
 
-from .config import RESOURCES_DIR
+from .config import CELLASSIGN_MARKERS_DIR
 
 
 def load_cellassign_matrix(name: str) -> pd.DataFrame:
     """Load a binary gene x cell-type marker matrix from resources/cellassign/."""
-    return pd.read_csv(RESOURCES_DIR / "cellassign" / f"{name}.csv", index_col=0)
+    return pd.read_csv(CELLASSIGN_MARKERS_DIR / f"{name}.csv", index_col=0)
 
 
 # ── Main epithelial cell type markers (used by CellAssign & dotplots) ──

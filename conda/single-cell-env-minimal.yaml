@@ -24,6 +24,7 @@ dependencies:
   - leidenalg
   - igraph
   - umap-learn
+  - scikit-image      # sc.pp.scrublet needs it to pick the doublet threshold
   # CellAssign / scVI
   - pip
   - pip:
@@ -47,3 +48,6 @@ dependencies:
   - jupyterlab
   - ipykernel
   - papermill
+  # Checks (scripts/check_notebooks.py, tests/)
+  - pytest
+  - pyflakes

@@ -6,7 +6,92 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from .config import FIGURES_DIR
 from .markers import filter_marker_dict
+
+
+# --- Doublet-score QC (used by the 2_Doublet_plotting notebooks) ---
+
+def plot_cluster_doublets(
+    adata,
+    cluster,
+    cluster_key="leiden",
+    score_key="doublet_score",
+    cmap="Reds",
+    bg_alpha=0.05,
+    fg_size=8,
+    bg_size=2,
+    show=True,
+):
+    """Plot cells on UMAP for a given cluster, colored by doublet score."""
+    umap = adata.obsm["X_umap"]
+    cl = adata.obs[cluster_key].astype(str)
+    mask = (cl == str(cluster)).to_numpy()
+    scores = adata.obs[score_key].values
+
+    fig, ax = plt.subplots(figsize=(5.2, 4.6))
+
+    # background: all other cells in grey
+    ax.scatter(umap[~mask, 0], umap[~mask, 1],
+               s=bg_size, c="lightgrey", alpha=bg_alpha, linewidths=0)
+
+    # foreground: this cluster, colored by doublet score (fixed scale 0–1)
+    scatt = ax.scatter(umap[mask, 0], umap[mask, 1],
+                       c=scores[mask], cmap=cmap, s=fg_size,
+                       vmin=0, vmax=1, linewidths=0)
+
+    cbar = plt.colorbar(scatt, ax=ax, fraction=0.046, pad=0.04)
+    cbar.ax.tick_params(labelsize=9)
+    cbar.set_label("")
+
+    ax.set_xticks([]); ax.set_yticks([])
+    ax.set_xlabel(""); ax.set_ylabel("")
+    ax.set_title(f"Cluster {cluster}: doublet score",
+                 fontsize=14, fontweight="bold", pad=12)
+
+    plt.tight_layout()
+    if show:
+        plt.show()
+    return fig, ax
+
+
+def save_doublet_umaps(
+    adata,
+    object_name: str,
+    cluster_key="leiden",
+    score_key="doublet_score",
+    base_dir=FIGURES_DIR / "qc" / "doublet_score_umaps",
+    dpi=300,
+):
+    """
+    Save one doublet-score UMAP per cluster to ``base_dir/object_name/``.
+
+    Parameters
+    ----------
+    adata : AnnData
+        Must have ``X_umap`` in ``.obsm`` and *score_key* in ``.obs``.
+    object_name : str
+        Names the save directory (e.g. 'd2_dz_clustered').
+    cluster_key, score_key : str
+        ``.obs`` columns holding cluster labels and doublet scores.
+    base_dir : str or Path
+        Parent directory for the per-object folder.
+    dpi : int
+    """
+    save_dir = Path(base_dir) / object_name
+    save_dir.mkdir(parents=True, exist_ok=True)
+    print(f"Saving doublet UMAPs to: {save_dir}")
+
+    def _key(v):
+        s = str(v)
+        return (0, int(s), "") if s.isdigit() else (1, 0, s)
+
+    for cl in sorted(map(str, adata.obs[cluster_key].unique()), key=_key):
+        fig, ax = plot_cluster_doublets(adata, cluster=cl, cluster_key=cluster_key,
+                                        score_key=score_key, show=False)
+        fig.savefig(save_dir / f"doublet_score_cluster_{cl}.png",
+                    dpi=dpi, bbox_inches="tight")
+        plt.close(fig)  # keep memory usage down
 
 
 # --- Veres-style panel builder (Scanpy/AnnData) ---

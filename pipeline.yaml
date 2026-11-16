@@ -1,0 +1,112 @@
+# Pipeline manifest: the order notebooks run in, and the conda env each needs.
+#
+# This file is the single source of truth for run order. It is read by
+#   scripts/run_pipeline.py      (executes the notebooks with papermill)
+#   tests/test_notebooks.py      (checks every input is produced by an earlier step)
+#
+# Notebook numbering is historical and does not always match run order
+# (e.g. d2-lapa 5.1 runs after 5), so trust the order here, not the filenames.
+#
+# envs:  key -> conda env name (see conda/*.yaml). A notebook's kernel is set
+#        to its env's name at run time, so register each env as a kernel once:
+#          conda activate <env> && python -m ipykernel install --user --name <env>
+
+envs:
+  sc: single-cell-env      # scanpy, scvi-tools (CellAssign), plotting
+  tf: decoupler-env        # decoupler + gseapy
+  dge: pydeseq-env         # PyDESeq2
+
+# Per-dataset steps. Paths are relative to notebooks/.
+# Inputs: data/data-objects/raw/<raw h5ad from src.config.DATASETS>.
+datasets:
+  D2_DZ:
+    folder: d2-dz
+    steps:
+      - {nb: 0_Quality_Control.ipynb,   env: sc}
+      - {nb: 1_Clustering.ipynb,        env: sc}
+      - {nb: 2_Doublet_plotting.ipynb,  env: sc}
+      - {nb: 3_Marker_plotting.ipynb,   env: sc}
+      - {nb: 4_Cell_Assign.ipynb,       env: sc}
+      - {nb: 5_Labelling.ipynb,         env: sc}
+      - {nb: 5.1_Labelling_PCs.ipynb,   env: sc}
+      - {nb: 6_Decoupler.ipynb,         env: tf}
+
+  D2_Lapa:
+    folder: d2-lapa
+    steps:
+      - {nb: 0_Quality_Control.ipynb,   env: sc}
+      - {nb: 1_Clustering.ipynb,        env: sc}
+      - {nb: 3_Marker_plotting.ipynb,   env: sc}
+      - {nb: 4_Cell_Assign.ipynb,       env: sc}
+      - {nb: 5_Plotting.ipynb,          env: sc}
+      - {nb: 5.1_Labelling_PCs.ipynb,   env: sc}
+      - {nb: 6_Decoupler.ipynb,         env: tf}
+
+  D4_DZ:
+    folder: d4-dz
+    steps:
+      - {nb: 0_Quality_Control.ipynb,   env: sc}
+      - {nb: 1_Clustering.ipynb,        env: sc}
+      - {nb: 3_Marker_plotting.ipynb,   env: sc}
+      - {nb: 5_Plotting.ipynb,          env: sc}
+      - {nb: 6_Decoupler.ipynb,         env: tf}
+
+  D4_Lapa:
+    folder: d4-lapa
+    steps:
+      - {nb: 0_Quality_Control.ipynb,   env: sc}
+      - {nb: 1_Clustering.ipynb,        env: sc}
+      - {nb: 3_Marker_plotting.ipynb,   env: sc}
+      - {nb: 4_Cell_Assign.ipynb,       env: sc}
+      - {nb: 5_Plotting.ipynb,          env: sc}
+      - {nb: 6_Decoupler.ipynb,         env: tf}
+
+  D4_AS:
+    folder: d4-as
+    steps:
+      - {nb: 0_Quality_Control.ipynb,   env: sc}
+      - {nb: 1_Clustering.ipynb,        env: sc}
+      - {nb: 2_Doublet_plotting.ipynb,  env: sc}
+      - {nb: 3_Marker_plotting.ipynb,   env: sc}
+      - {nb: 4_Cell_Assign.ipynb,       env: sc}
+      - {nb: 5_Plotting.ipynb,          env: sc}
+
+  G6:
+    folder: g6
+    steps:
+      - {nb: 0_Quality_Control.ipynb,   env: sc}
+      - {nb: 1_Clustering.ipynb,        env: sc}
+      - {nb: 3_Marker_plotting.ipynb,   env: sc}
+      - {nb: 4_Cell_Assign.ipynb,       env: sc}
+      - {nb: 5_Labelling.ipynb,         env: sc}
+
+  D10_Lapa:
+    folder: d10-lapa
+    steps:
+      - {nb: 0-quality_control.ipynb,                          env: sc}
+      - {nb: 1-clustering_and_dimensionality_reduction.ipynb,  env: sc}
+      - {nb: 2-marker_plotting.ipynb,                          env: sc}
+      - {nb: 3-unsupervised_assignment.ipynb,                  env: sc}
+      - {nb: 4-eec_subanalysis.ipynb,                          env: sc}
+      - {nb: 5-sample-plotting.ipynb,                          env: sc}
+      - {nb: 6_More_plotting.ipynb,                            env: sc}
+      - {nb: 7_Decoupler.ipynb,                                env: tf}
+
+# Steps that combine datasets; run after every dataset above has finished.
+cross_dataset:
+  - {nb: dge/pseudobulk_deseq2.ipynb,  env: dge, params_from: dge/dge_comparisons.yaml}
+  - {nb: gsea/gsea_prerank.ipynb,      env: tf}
+
+# Not part of the reproducible chain: sense checks, superseded sub-analyses and
+# one-off exploration. Kept for the record; the runner never executes them.
+not_in_pipeline:
+  - d4-as/1.1_Clustering_sense_check.ipynb
+  - d4-dz/1.1_Quality_sense_check.ipynb
+  - d4-lapa/1.1_Quality_sense_check.ipynb
+  - g6/1.1_Clustering_sensecheck.ipynb
+  - d10-lapa/1.2_Reclustering_EECs.ipynb       # superseded by 4-eec_subanalysis
+  - d10-lapa/1.3_CellAssign_EECs.ipynb         # superseded by 4-eec_subanalysis
+  - d10-lapa/1.3_Relabelled_EECs.ipynb         # superseded by 4-eec_subanalysis
+  - d10-lapa/1.4_EEC_subanalysis.ipynb         # superseded by 4-eec_subanalysis
+  - exploratory/
+  - dge/archive/

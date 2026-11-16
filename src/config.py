@@ -1,6 +1,17 @@
 """
 Project paths and dataset registry for the Breault Lab single-cell project.
 
+Layout (everything under data/ and figures/ is gitignored and regenerated):
+
+    data/data-objects/raw/          inputs: one h5ad per dataset (see README)
+    data/data-objects/qc/           0_Quality_Control  -> doublet_*.h5ad
+    data/data-objects/clustered/    1_Clustering       -> clustered_*.h5ad
+    data/data-objects/cellassign/   4_Cell_Assign      -> *_predictions.h5ad
+    data/data-objects/labelled/     5_Labelling        -> *_manual_labels*.h5ad
+    data/analysis-files/dge/        pseudobulk DESeq2 results
+    data/analysis-files/gsea/       GSEA results
+    figures/                        all plots
+
 Usage from any notebook (works regardless of CWD):
     import sys
     from pathlib import Path
@@ -24,6 +35,7 @@ NOTEBOOKS_DIR = PROJECT_ROOT / "notebooks"
 # Tracked reference inputs (marker matrices, annotation tables). Unlike DATA_DIR
 # these are not derived and cannot be regenerated, so they live in git.
 RESOURCES_DIR = PROJECT_ROOT / "resources"
+CELLASSIGN_MARKERS_DIR = RESOURCES_DIR / "cellassign"   # binary gene x cell-type CSVs
 
 # ── Data subdirectories ──
 DATA_OBJECTS_DIR = DATA_DIR / "data-objects"
@@ -46,8 +58,33 @@ GSEA_OUTPUT_DIR = ANALYSIS_FILES_DIR / "gsea" / "gseapy-output"
 CELLRANK_DIR = DATA_OBJECTS_DIR / "cellrank"
 CELLRANK_FIGURES_DIR = FIGURES_DIR / "cellrank"
 
+# CellAssign per-cell probability tables written by the 4_Cell_Assign notebooks
+CELLASSIGN_TABLES_DIR = DATA_DIR / "cell_assign_dfs"
+
 # ── Backwards compatibility ──
+# Notebooks written before the data/ reorganisation use ANALYSIS_DIR; it is the
+# same directory as DATA_DIR.
 ANALYSIS_DIR = DATA_DIR
+
+# Every directory the pipeline writes into. Created on import so a fresh clone
+# can run without "No such file or directory" errors; all of them are gitignored.
+OUTPUT_DIRS = (
+    RAW_DIR, QC_DIR, CLUSTERED_DIR, CELLASSIGN_DIR, LABELLED_DIR,
+    CELLASSIGN_TABLES_DIR, DGE_INPUT_DIR, DGE_OUTPUT_DIR, GSEA_OUTPUT_DIR,
+    CELLRANK_DIR, FIGURES_DIR,
+)
+
+
+def ensure_output_dirs():
+    """Create the (gitignored) output directory tree. Safe to call repeatedly."""
+    for d in OUTPUT_DIRS:
+        try:
+            d.mkdir(parents=True, exist_ok=True)
+        except OSError:
+            pass  # read-only checkout: reading still works, writes will say why
+
+
+ensure_output_dirs()
 
 # ── Dataset registry ──
 # Maps dataset key -> dict with h5ad paths for different processing stages.
