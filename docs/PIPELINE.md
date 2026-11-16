@@ -128,7 +128,7 @@ existed in an old kernel session. Run it after renaming or moving anything.
 | Slot                        | Contents                                                        |
 |-----------------------------|-----------------------------------------------------------------|
 | `layers["counts"]`          | raw integer counts. Used by CellAssign and pseudobulk DGE.      |
-| `.X` in raw/ and qc/        | log-normalised (`log1p` of counts scaled to 10,000)             |
+| `.X` in raw/ and qc/        | log-normalised (`log1p` of counts scaled to 10,000). Exception: D10's qc/ object holds raw counts in `.X` (log values in `layers["logcounts"]`), so clustering reads raw/ and takes only the QC obs columns. |
 | `.X` in clustered/ onward   | **z-scored** (`sc.pp.scale`, clipped at 10). Use `layers["counts"]` or re-normalise for expression plots. |
 | `obs["participant"]`        | donor (from freemuxlet); `Doublet` / `Negative` are not donors  |
 | `obs["Condition"]`          | `Dz`, `Lapa` or `AS`                                            |
